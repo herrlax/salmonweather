@@ -275,7 +275,7 @@ public class MainActivity extends Activity {
 
                     if(cwd.hasRainInstance()) {
                         boolean rainy = presenter.isRainy(cwd.getRainInstance().getRain());
-                        System.out.println("RAIN: " + cwd.getRainInstance().getRain() + "mm rain/hour");
+                        System.out.println("RAIN: " + cwd.getRainInstance().getRain() + " mm rain/hour");
                         model.setRainy(rainy);
                     }
 
