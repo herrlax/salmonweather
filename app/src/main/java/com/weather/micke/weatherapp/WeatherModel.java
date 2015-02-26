@@ -4,14 +4,14 @@ package com.weather.micke.weatherapp;
  * Created by Mikael Malmqvist on 2015-01-07.
  * Model containing necessary data.
  */
-public class MainModel {
+public class WeatherModel {
     private double temp;
     private double humidity;
     private String city;
     private boolean rainy;
     private boolean cloudy;
 
-    public MainModel() {
+    public WeatherModel() {
         resetData();
     }
 
