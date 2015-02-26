@@ -4,7 +4,7 @@ package com.weather.micke.weatherapp;
  * Created by Mikael Malmqvist on 2015-01-09.
  * Handles logic for the activity based on input data.
  */
-public class MainPresenter {
+public class WeatherPresenter {
 
     /**
      * Decides if it's rainy or not.
