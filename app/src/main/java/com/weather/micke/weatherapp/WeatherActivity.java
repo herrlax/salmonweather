@@ -34,14 +34,6 @@ public class WeatherActivity extends Activity {
         return model;
     }
 
-    public WeatherPresenter getPresenter() {
-        return presenter;
-    }
-
-    public void setCity(String city) {
-        model.setCity(city);
-    }
-
     public void fetchWeather() {
         new FetchWeatherTask().execute();
     }
@@ -66,9 +58,7 @@ public class WeatherActivity extends Activity {
                     model.setHumidity(99.0);
                 }
 
-
                 System.out.println("SOMETHING WENT WRONG!!!**************** " + e.getClass());
-
 
             }
 
@@ -111,6 +101,7 @@ public class WeatherActivity extends Activity {
 
 
                         model.setHumidity(humidity);*/
+                        System.out.println("JUST SET THE TEMP TO " + temp);
                         model.setTemp(temp);
                     }
 
