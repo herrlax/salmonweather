@@ -5,5 +5,5 @@
     android:initialLayout="@layout/wideget_layout"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:updatePeriodMillis="10" >
+    android:updatePeriodMillis="600000" >
 </appwidget-provider>
