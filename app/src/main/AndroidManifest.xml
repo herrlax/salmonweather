@@ -11,6 +11,12 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
+        <activity android:name=".WeatherConfigActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        
         <receiver android:name=".utils.MyWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -32,6 +38,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".WeatherActivity"
+            android:screenOrientation="portrait">
+
+         </activity>
     </application>
 
 </manifest>

@@ -124,8 +124,15 @@ public class MainActivity extends Activity {
                 // resets data
                 weatherActivity.getModel().resetData();
 
-                weatherActivity.getModel().setCity("" + dialogText.getText());
-                loadWeather(iconImageView);
+                if(dialogText.getText().equals("candy kingdom")) {
+                    weatherActivity.getModel().setCity("Miami");
+                    loadWeather(iconImageView);
+
+                } else {
+                    weatherActivity.getModel().setCity("" + dialogText.getText());
+                    loadWeather(iconImageView);
+                }
+
 
             }
         });
@@ -198,6 +205,7 @@ public class MainActivity extends Activity {
         // stops the spinner when weather is fetched
         spinnerDialog.cancel();
         cityTextView.setText(weatherActivity.getModel().getCity());
+
         tempTextView.setText(weatherActivity.getModel().getTemp() + " °C");
         //humTextView.setText("Humidity: " + weatherActivity.getModel().getHumidity() + "%");
 
@@ -205,7 +213,14 @@ public class MainActivity extends Activity {
     }
 
     public void setWeatherIcon() {
-        iconImageView.setImageResource(weatherActivity.getWeatherIcon());
+
+        if(weatherActivity.getModel().getCity().equals("Miami")) {
+            iconImageView.setImageResource(R.drawable.dog);
+        } else {
+
+            iconImageView.setImageResource(weatherActivity.getWeatherIcon());
+        }
+
 
         /*if(weatherActivity.getModel().getCloudy()) { // If it's cloudy..
             if(weatherActivity.getModel().getRainy()) { // and it's rainy..
