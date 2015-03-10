@@ -8,11 +8,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Adapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import net.aksingh.owmjapis.CurrentWeather;
@@ -32,8 +37,11 @@ public class MainActivity extends Activity {
     // UI components for main app
     private TextView cityTextView;
     private TextView tempTextView;
+    private AutoCompleteTextView searcher;
     private ImageView iconImageView;
     private EditText dialogText;
+
+    InputMethodManager keyboard;
 
     // Dialogs
     private ProgressDialog spinnerDialog;
@@ -59,6 +67,7 @@ public class MainActivity extends Activity {
 
             } else if(weatherActivity.getModel().getTemp() != -237) {
 
+                spinnerDialog.cancel();
                 // Updates UI
                 updateUI();
 
@@ -98,7 +107,9 @@ public class MainActivity extends Activity {
                 && weatherActivity.getModel() != null) {
             initUI();
             cityTextView.setText(weatherActivity.getModel().getCity());
-            tempTextView.setText(weatherActivity.getModel().getTemp() + " °C");
+            if(weatherActivity.getModel().getTemp() > -200) {
+                tempTextView.setText(weatherActivity.getModel().getTemp() + " °C");
+            }
         }
 
     }
@@ -109,6 +120,44 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main_layout);
 
         weatherActivity = new WeatherActivity(API_KEY);
+
+        searcher = (AutoCompleteTextView) findViewById(R.id.search_text_view);
+
+        // Handles when user clicks "done" button on keyboard
+        searcher.setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                System.out.println("view: " + view);
+
+                if(keyEvent.getAction() == keyEvent.ACTION_DOWN) {
+
+                    // If done is clicked
+                    if(i == 66) {
+                        // resets data
+                        weatherActivity.getModel().resetData();
+
+                        weatherActivity.getModel().setCity("" + searcher.getText());
+                        loadWeather(iconImageView);
+
+                        // Hides keyboard
+                        keyboard.hideSoftInputFromWindow(searcher.getWindowToken(), 0);
+
+                        // clear text
+                        searcher.setText("");
+                    }
+                }
+
+
+
+                return true;
+            }
+        });
+
+        keyboard = (InputMethodManager) getSystemService(
+                this.INPUT_METHOD_SERVICE);
+
 
         dialogText = new EditText(this);
 
@@ -145,7 +194,7 @@ public class MainActivity extends Activity {
         });
 
         //selectCity(iconImageView);
-        cityDialog.show();
+        // cityDialog.show();
         //resetModel();
         //setCity("London");
 
@@ -161,6 +210,7 @@ public class MainActivity extends Activity {
         tempTextView = (TextView) findViewById(R.id.tempTextView);
         //humTextView = (TextView) findViewById(R.id.humTextView);
         iconImageView = (ImageView) findViewById(R.id.imageView);
+
 
     }
 
@@ -206,7 +256,9 @@ public class MainActivity extends Activity {
         spinnerDialog.cancel();
         cityTextView.setText(weatherActivity.getModel().getCity());
 
-        tempTextView.setText(weatherActivity.getModel().getTemp() + " °C");
+        if(weatherActivity.getModel().getTemp() > -200) {
+            tempTextView.setText(weatherActivity.getModel().getTemp() + " °C");
+        }
         //humTextView.setText("Humidity: " + weatherActivity.getModel().getHumidity() + "%");
 
         setWeatherIcon();
