@@ -34,7 +34,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
             // WeatherActivity to fetch weather from
             WeatherActivity weatherActivity = new WeatherActivity();
-            weatherActivity.getModel().setCity("gothenburg");
+            weatherActivity.getModel().setCity("Oslo");
 
             weatherActivity.fetchWeather();
 
