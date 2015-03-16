@@ -112,8 +112,8 @@ public class WeatherActivity extends Activity {
                     }
 
                     if (cwd.hasRainInstance()) {
-                        boolean rainy = presenter.isRainy(cwd.getRainInstance().getRain());
-                        System.out.println("RAIN: " + cwd.getRainInstance().getRain() + " mm rain/hour");
+                        boolean rainy = presenter.isRainy(cwd.getRainInstance().getRain3h());
+                        System.out.println("RAIN: " + cwd.getRainInstance().getRain3h() + " mm rain/hour");
                         model.setRainy(rainy);
                     }
 

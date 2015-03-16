@@ -173,15 +173,8 @@ public class MainActivity extends Activity {
                 // resets data
                 weatherActivity.getModel().resetData();
 
-                if(dialogText.getText().equals("candy kingdom")) {
-                    weatherActivity.getModel().setCity("Miami");
-                    loadWeather(iconImageView);
-
-                } else {
-                    weatherActivity.getModel().setCity("" + dialogText.getText());
-                    loadWeather(iconImageView);
-                }
-
+                weatherActivity.getModel().setCity("" + dialogText.getText());
+                loadWeather(iconImageView);
 
             }
         });
@@ -193,14 +186,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        //selectCity(iconImageView);
-        // cityDialog.show();
-        //resetModel();
-        //setCity("London");
-
         initUI();
 
-        // loadWeather(iconImageView);
 
 
     }
@@ -266,12 +253,7 @@ public class MainActivity extends Activity {
 
     public void setWeatherIcon() {
 
-        if(weatherActivity.getModel().getCity().equals("Miami")) {
-            iconImageView.setImageResource(R.drawable.dog);
-        } else {
-
-            iconImageView.setImageResource(weatherActivity.getWeatherIcon());
-        }
+        iconImageView.setImageResource(weatherActivity.getWeatherIcon());
 
 
         /*if(weatherActivity.getModel().getCloudy()) { // If it's cloudy..
