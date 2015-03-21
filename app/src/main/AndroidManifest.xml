@@ -7,9 +7,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:allowBackup="true"
-        android:icon="@drawable/card"
+        android:icon="@drawable/sun"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/LightBlueActionBarTheme" >
 
         <activity android:name=".WeatherConfigActivity">
             <intent-filter>
