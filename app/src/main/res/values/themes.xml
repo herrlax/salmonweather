@@ -12,7 +12,7 @@
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="android:colorAccent">@color/accent</item>
 
-        <item name="android:statusBarColor">@color/light_blue</item>
+        <item name="android:statusBarColor">@color/darker_blue</item>
         <item name="android:navigationBarColor">@color/darker_blue</item>
         <item name="android:textColorPrimary">@color/textLightest</item>
     </style>
