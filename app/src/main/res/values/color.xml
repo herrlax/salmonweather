@@ -3,7 +3,10 @@
     <color name="text_gray">#757575</color>
     <color name="textLight">#757575</color>
     <color name="textLighter">#9e9e9e</color>
-    <color name="textLightest">#bdbdbd</color>
+    <color name="textLightest">#E3F2FD</color>
     <color name="textDark">#616161</color>
     <color name="background_color">#eeeeee</color>
+    <color name="light_blue">#1E88E5</color>
+    <color name="darker_blue">#1976D2</color>
+    <color name="accent">#42A5F5</color>
 </resources>

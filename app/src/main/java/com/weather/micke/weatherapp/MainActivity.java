@@ -57,6 +57,7 @@ public class MainActivity extends Activity {
 
             // Fetches weather data
             weatherActivity.fetchWeather();
+
             System.out.println("Temp: " + weatherActivity.getModel().getTemp() + " (FETCHED)");
 
             // if no answer after 10 seconds time out
@@ -123,6 +124,14 @@ public class MainActivity extends Activity {
 
         searcher = (AutoCompleteTextView) findViewById(R.id.search_text_view);
 
+        // Sets default weather in Miami
+        weatherActivity.getModel().setCity("Miami");
+        loadWeather(iconImageView);
+        searcher.setHint(weatherActivity.getModel().getCity());
+
+
+        System.out.println("LOADING: " + weatherActivity.getModel().getCity());
+
         // Handles when user clicks "done" button on keyboard
         searcher.setOnKeyListener(new View.OnKeyListener() {
 
@@ -140,6 +149,8 @@ public class MainActivity extends Activity {
 
                         weatherActivity.getModel().setCity("" + searcher.getText());
                         loadWeather(iconImageView);
+
+                        System.out.println("LOADING: " + weatherActivity.getModel().getCity());
 
                         // Hides keyboard
                         keyboard.hideSoftInputFromWindow(searcher.getWindowToken(), 0);

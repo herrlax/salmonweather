@@ -22,6 +22,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         System.out.println("NOW UPDATING WIDGET");
+        System.out.println();
+
 
         for(int i = 0; i < appWidgetIds.length; i++) {
             // getting current widget to update
@@ -29,38 +31,11 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
             // Create an intent to launch the activity
             Intent intent = new Intent(context, WeatherActivity.class);
+            System.out.println("GOT FROM INTENT: " + intent.getStringExtra("city") + " ****************");
 
-            //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.wideget_layout);
-
-            // WeatherActivity to fetch weather from
-            WeatherActivity weatherActivity = new WeatherActivity();
-
-            // TODO fetch city from intents extra
-            weatherActivity.getModel().setCity("Oslo");
-
-            weatherActivity.fetchWeather();
-
-            int ost = 0;
-            while(ost < 999999999) {
-                ost++;
-                // waiting for valid weather data to be fetched
-                // not the most glorious way of doing this though..
-            }
-
-                    /*System.out.println("CITY FROM CONFIG VIEW: " + intent.
-                getExtras().
-                getString(appWidgetManager.
-                        EXTRA_APPWIDGET_ID));*/
-
-            views.setTextViewText(R.id.cityTextView, weatherActivity.getModel().getCity());
-            views.setTextViewText(R.id.tempTextView, weatherActivity.getModel().getTemp() + " °C");
-            views.setImageViewResource(R.id.imageView, weatherActivity.getWeatherIcon());
-
-            //myNewView.setOnClickPendingIntent(R.id.imageView, pendingIntent);
 
             // Tell the appwidgetmanager to update the current app
-            appWidgetManager.updateAppWidget(appWidgetId, views);
+            //appWidgetManager.updateAppWidget(appWidgetId, views);
 
         }
     }
