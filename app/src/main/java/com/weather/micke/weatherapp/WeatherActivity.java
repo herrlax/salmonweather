@@ -11,6 +11,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
+import java.util.Calendar;
 
 /**
  * Created by Mikael Malmqvist on 2015-02-26.
@@ -177,7 +178,16 @@ public class WeatherActivity extends Activity {
         } else { // sunny nice day!
             // TODO set sun icon
             System.out.println("IT'S SUNNY");
-            return(R.drawable.sun);
+            int hour = Calendar.getInstance().getTime().getHours();
+
+
+            // sun between 06.00 and 19.00
+            if(hour < 19 && hour > 6) {
+                return(R.drawable.sun);
+            }
+
+            // moon between 19.00 and 06.00
+            return(R.drawable.moon);
 
         }
     }
