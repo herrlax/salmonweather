@@ -10,6 +10,8 @@ public class WeatherModel {
     private String city;
     private boolean rainy;
     private boolean cloudy;
+    private boolean celsius = true;
+    int ERROR_CODE;
 
     public WeatherModel() {
         resetData();
@@ -22,7 +24,7 @@ public class WeatherModel {
         rainy = false;
         cloudy = false;
 
-        System.out.println("RESET DATA________________________");
+        System.out.println("______________________ RESET DATA _________________________");
     }
 
     public void setRainy(boolean rainy) {
@@ -63,5 +65,13 @@ public class WeatherModel {
 
     public boolean getRainy() {
         return rainy;
+    }
+
+    public void setCelsius(boolean celsius) {
+        this.celsius = celsius;
+    }
+
+    public boolean useCelsius() {
+        return celsius;
     }
 }

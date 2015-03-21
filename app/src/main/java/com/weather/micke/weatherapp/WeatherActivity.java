@@ -10,6 +10,8 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.InvalidKeyException;
+import java.util.Calendar;
 
 /**
  * Created by Mikael Malmqvist on 2015-02-26.
@@ -34,8 +36,18 @@ public class WeatherActivity extends Activity {
         return model;
     }
 
+    private FetchWeatherTask task;
+
     public void fetchWeather() {
-        new FetchWeatherTask().execute();
+
+        if(task == null || task.getStatus() != AsyncTask.Status.RUNNING) {
+            System.out.println("EXECUTED SHIT");
+            task = new FetchWeatherTask();
+            task.execute();
+        }
+
+        System.out.println("STATUS: " + task.getStatus());
+
     }
 
     /**
@@ -48,14 +60,29 @@ public class WeatherActivity extends Activity {
 
         @Override
         protected Object doInBackground(Object[] params) {
+
             try {
+                // Resetting error boolean
                 fetchWeatherData();
 
             } catch (Exception e) {
+
+                // If user entered invalid indata
                 if (e instanceof IOException) {
-                    // insert fake data
-                    model.setTemp(-230);
-                    model.setHumidity(99.0);
+                    System.out.println(e.getMessage());
+
+                    // setting error boolean for invalid input (-20000)
+                    model.ERROR_CODE = -20000;
+
+
+                }
+
+                // If the API-key is invalid
+                if(e instanceof InvalidKeyException) {
+                    System.out.println(e.getMessage());
+
+                    // setting error boolean for invalid API_key (-20001)
+                    model.ERROR_CODE = -20001;
                 }
 
                 System.out.println("SOMETHING WENT WRONG!!!**************** " + e.getClass());
@@ -66,24 +93,34 @@ public class WeatherActivity extends Activity {
             return null;
         }
 
-        public void fetchWeatherData() throws IOException, MalformedURLException, JSONException {
+        public void fetchWeatherData() throws IOException, MalformedURLException, JSONException, InvalidKeyException {
+
+            OpenWeatherMap.Units system = OpenWeatherMap.Units.IMPERIAL;
+
+            // Setting metric or imperial ..
+            if(model.useCelsius()) {
+                system = OpenWeatherMap.Units.METRIC;
+            }
+
+
             // declaring object of "OpenWeatherMap" class
-            owm = new OpenWeatherMap(OpenWeatherMap.Units.METRIC, OpenWeatherMap.Language.SWEDISH, API_KEY);
+            owm = new OpenWeatherMap(system, OpenWeatherMap.Language.ENGLISH, API_KEY);
+
 
             cwd = owm.currentWeatherByCityName(model.getCity());
-            if (cwd.isValid()) {
+
+
+            if(!cwd.isValid() || !cwd.hasCityName()) {
+                //throw new IOException("INVALID CITY NAME!");
+                System.out.println("INVALID INPUT!!!!!!!!!!!!!!!!!!!!!!!!");
+                model.ERROR_CODE = -20000;
+
+            } else {
+
                 System.out.println("NOW UPDATING WEATHER");
 
-                // checking if city name is available
-                if (cwd.hasCityName()) {
-                    //printing city name from the retrieved data
-                    System.out.println("City: " + cwd.getCityName());
-                    model.setCity(cwd.getCityName());
-
-                } else {
-                    System.out.println("Illegal name");
-                    throw new IOException();
-                }
+                System.out.println("City: " + cwd.getCityName());
+                model.setCity(cwd.getCityName());
 
                 // If weather data is available
                 if (cwd.hasWeatherInstance()) {
@@ -92,16 +129,17 @@ public class WeatherActivity extends Activity {
 
                     if (cwd.hasMainInstance()) {
                         double temp = cwd.getMainInstance().getTemperature();
+                        // If using celsius convert temp
                         temp = presenter.round1dec(temp);
-                        System.out.println("Temp: " + temp + " °C");
 
+
+                        System.out.println("Temp: " + temp + " °");
 
                         /*double humidity = cwd.getMainInstance().getHumidity();
                         System.out.println("Humidity: " + humidity + "%");
 
 
                         model.setHumidity(humidity);*/
-                        System.out.println("JUST SET THE TEMP TO " + temp);
                         model.setTemp(temp);
                     }
 
@@ -112,16 +150,13 @@ public class WeatherActivity extends Activity {
                     }
 
                     if (cwd.hasRainInstance()) {
-                        boolean rainy = presenter.isRainy(cwd.getRainInstance().getRain());
-                        System.out.println("RAIN: " + cwd.getRainInstance().getRain() + " mm rain/hour");
+                        boolean rainy = presenter.isRainy(cwd.getRainInstance().getRain3h());
+                        System.out.println("RAIN: " + cwd.getRainInstance().getRain3h() + " mm rain/hour");
                         model.setRainy(rainy);
                     }
 
                 }
 
-            } else {
-
-                System.out.println("API KEY NOT VALID");
             }
 
         }
@@ -142,8 +177,17 @@ public class WeatherActivity extends Activity {
         } else { // sunny nice day!
             // TODO set sun icon
             System.out.println("IT'S SUNNY");
-            return(R.drawable.sun);
 
+            int hour = Calendar.getInstance().getTime().getHours();
+
+
+            // sun between 06.00 and 19.00
+            if(hour < 19 && hour > 6) {
+                return(R.drawable.sun);
+            }
+
+            // moon between 19.00 and 06.00
+            return(R.drawable.moon);
         }
     }
 

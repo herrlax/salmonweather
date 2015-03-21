@@ -20,15 +20,12 @@ public class MyWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        System.out.println("NOW UPDATING WIDGET");
-
         for(int i = 0; i < appWidgetIds.length; i++) {
             // getting current widget to update
             int appWidgetId = appWidgetIds[i];
 
             // Create an intent to launch the activity
             Intent intent = new Intent(context, WeatherActivity.class);
-
             //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             RemoteViews myNewView = new RemoteViews(context.getPackageName(), R.layout.wideget_layout);
 
@@ -65,6 +62,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
             // Tell the appwidgetmanager to update the current app
             appWidgetManager.updateAppWidget(appWidgetId, myNewView);
+
 
         }
     }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources><!-- the theme applied to the application or activity -->
+
+    <style name="LightBlueActionBarTheme"
+        parent="@android:style/Theme.Material.Light">
+        <item name="android:actionBarStyle">@style/myLightActionBar</item>
+        <!-- Main theme colors -->
+        <!--   your app branding color for the app bar -->
+        <item name="android:colorPrimary">@color/light_blue</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="android:colorPrimaryDark">@color/darker_blue</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">@color/accent</item>
+
+        <item name="android:statusBarColor">@color/darker_blue</item>
+        <item name="android:navigationBarColor">@color/darker_blue</item>
+        <item name="android:textColorPrimary">@color/textLightest</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="myLightActionBar" parent="@android:style/Theme.Material.Light">
+        <item name="android:background">@color/light_blue</item>
+
+
+    </style>
+
+</resources>

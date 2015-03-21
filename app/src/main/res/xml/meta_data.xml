@@ -5,5 +5,6 @@
     android:initialLayout="@layout/wideget_layout"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
+    android:configure="com.weather.micke.weatherapp.WeatherConfigActivity"
     android:updatePeriodMillis="600000" >
 </appwidget-provider>

@@ -1,0 +1,76 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WeatherConfigActivity">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_height="200dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/card"
+        android:id="@+id/firstCard"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cityTextView"
+            android:layout_margin="20dp"
+            android:text="Gotham"
+            android:textSize="36dp"
+            android:textColor="@color/text_gray"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="54sp"
+            android:textColor="@color/text_gray"
+            android:layout_marginLeft="20dp"
+            android:text=""
+            android:id="@+id/tempTextView"
+            android:layout_below="@+id/cityTextView"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/imageView"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="20dp"
+            android:scaleType="fitCenter"
+            android:clickable="true"
+            android:onClick="selectCity"
+            android:src="@drawable/sun" />
+
+    </RelativeLayout>
+
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Ok"
+        android:id="@+id/button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:theme="@style/AppTheme" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:id="@+id/editCityText"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/firstCard"
+        android:layout_alignStart="@+id/firstCard"
+        android:text="Gotham" />
+
+</RelativeLayout>
