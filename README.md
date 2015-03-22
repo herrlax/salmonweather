@@ -15,4 +15,4 @@
 
 
 
-<img height="275" width="275" src="https://raw.github.com/herrlax/salmonweather/master/documentation/app_psd.png">
+<img height="503" width="275" src="https://raw.github.com/herrlax/salmonweather/master/documentation/app_psd.png">
