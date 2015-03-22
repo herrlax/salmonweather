@@ -3,20 +3,25 @@ package com.weather.micke.weatherapp;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Adapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.SearchView;
@@ -40,7 +45,6 @@ public class MainActivity extends Activity {
 
     // Dialogs
     private ProgressDialog spinnerDialog;
-    private AlertDialog.Builder cityDialog;
 
     //private int seconds = 0;
 
@@ -81,16 +85,7 @@ public class MainActivity extends Activity {
                         .setIcon(R.drawable.ic_warning_grey600_48dp)
                         .show();
 
-            } /*else if(seconds >= 10) { // if no answer after 10 seconds time out
->>>>>>> develop
-                System.out.println("SYSTEM TIME OUT");
-                spinnerDialog.cancel();
-                //spinnerDialog.cancel();
-
-<<<<<<< HEAD
             } else if(weatherActivity.getModel().getTemp() != -237) {
-=======
-            } */else if(weatherActivity.getModel().getTemp() != -237) {
 
                 spinnerDialog.cancel();
                 // Updates UI
@@ -161,10 +156,12 @@ public class MainActivity extends Activity {
 
         searcher = (AutoCompleteTextView) findViewById(R.id.search_text_view);
 
-        // Sets default weather in Miami
-        weatherActivity.getModel().setCity("Miami");
-        loadWeather(iconImageView);
-        searcher.setHint(weatherActivity.getModel().getCity());
+        // If there's a preferred location set, load weather
+        if(!getPrefPlace().equals("")) {
+            weatherActivity.getModel().setCity(getPrefPlace());
+            loadWeather(iconImageView);
+            searcher.setHint(weatherActivity.getModel().getCity());
+        }
 
 
         System.out.println("LOADING: " + weatherActivity.getModel().getCity());
@@ -216,36 +213,6 @@ public class MainActivity extends Activity {
         keyboard = (InputMethodManager) getSystemService(
                 this.INPUT_METHOD_SERVICE);
 
-
-        /*dialogText = new EditText(this);
-
-        cityDialog = new AlertDialog.Builder(this);
-        cityDialog.setMessage("Please enter city!");
-        cityDialog.setCancelable(true);
-
-        cityDialog.setView(dialogText);
-        cityDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                // resets data
-                weatherActivity.getModel().resetData();
-
-                weatherActivity.getModel().setCity("" + dialogText.getText());
-                loadWeather(iconImageView);
-
-            }
-        });
-
-        cityDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                System.out.println("CANCEL");
-            }
-        });
-
-        cityDialog.show();*/
-
         initUI();
 
 
@@ -258,22 +225,13 @@ public class MainActivity extends Activity {
         iconImageView = (ImageView) findViewById(R.id.imageView);
 
     }
-    /**
-     * Selecting city from app.
-     * @param view view calling this function
-     */
-    public void selectCity(View view) {
-        dialogText = new EditText(this);
-        cityDialog.setView(dialogText);
-        cityDialog.show();
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -283,13 +241,91 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+        // Detect what button in menu was clicked
+        switch(id) {
+            case R.id.action_file:
+                loadPrefLocation();
+                return true;
+
+            case R.id.action_settings:
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Setting location as preferred.
+     * @param view pref button.
+     */
+    public void setPref(View view) {
+        // Check for a valid location
+        if(!((TextView)findViewById(R.id.cityTextView)).getText()
+                .toString()
+                .trim()
+                .equals("")) {
+
+            SharedPreferences sharedPref = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            // Set or remove saved place
+            if(getPrefPlace().equals(cityTextView.getText().toString())) {
+                // If the place is a saved place, UNSAVE it!
+                ((ImageButton) findViewById(R.id.prefHeart)).setImageDrawable(getDrawable(R.drawable.ic_favorite_outline_grey600_48dp));
+                editor.putString(getString(R.string.saved_place), "");
+
+            } else {
+                // If the place isn't saved already, S(H)AVE it!
+                ((ImageButton) findViewById(R.id.prefHeart)).setImageDrawable(getDrawable(R.drawable.ic_favorite_grey600_48dp));
+                editor.putString(getString(R.string.saved_place), ((TextView)findViewById(R.id.cityTextView)).getText().toString());
+            }
+
+            editor.commit();
+
+            System.out.println("SAVED TO SHARED PREFERENCES: " + getPrefPlace());
         }
 
-        return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Gets the save preferred location.
+     * @return preferred location.
+     */
+    private String getPrefPlace() {
+        SharedPreferences sharedPref = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
+        String defaultValue = getResources().getString(R.string.saved_place);
+        return sharedPref.getString(getString(R.string.saved_place), defaultValue);
+    }
+
+    /**
+     * Open preferred location
+     */
+    public void loadPrefLocation() {
+
+        // If there's a saved place
+        if(!getPrefPlace().equals("")) {
+            weatherActivity.getModel().resetData();
+
+            weatherActivity.getModel().setCity(getPrefPlace());
+
+            loadWeather(iconImageView);
+
+            // clear text
+            searcher.setText("");
+            searcher.setHint(weatherActivity.getModel().getCity());
+        } else {
+            // display error dialog
+            new AlertDialog.Builder(MainActivity.this).setTitle("No preferred location")
+                    .setMessage("You haven't set a preferred location yet!")
+                    .setPositiveButton("Okay", null)
+                    .setIcon(R.drawable.ic_warning_grey600_48dp)
+                    .show();
+        }
+
+    }
+
 
     /**
      * Updates UI components based on data in model.
@@ -304,6 +340,16 @@ public class MainActivity extends Activity {
             tempTextView.setText(weatherActivity.getModel().getTemp() + " °");
         //}
         //humTextView.setText("Humidity: " + weatherActivity.getModel().getHumidity() + "%");
+
+        // setting pref place heart
+        // TODO check if the city is a pref place
+
+        if(getPrefPlace().equals(cityTextView.getText().toString())) {
+            ((ImageButton) findViewById(R.id.prefHeart)).setImageDrawable(getDrawable(R.drawable.ic_favorite_grey600_48dp));
+        } else {
+            ((ImageButton) findViewById(R.id.prefHeart)).setImageDrawable(getDrawable(R.drawable.ic_favorite_outline_grey600_48dp));
+        }
+
 
         setWeatherIcon();
     }
@@ -328,24 +374,6 @@ public class MainActivity extends Activity {
 
     public void setWeatherIcon() {
         iconImageView.setImageResource(weatherActivity.getWeatherIcon());
-
-
-        /*if(weatherActivity.getModel().getCloudy()) { // If it's cloudy..
-            if(weatherActivity.getModel().getRainy()) { // and it's rainy..
-                // TODO set clouds with rain icon
-                iconImageView.setImageResource(R.drawable.rainy);
-                System.out.println("IT'S RAINY");
-            } else { // just cloudy..
-                // TODO set cloud icon
-                iconImageView.setImageResource(R.drawable.cloudy);
-                System.out.println("IT'S JUST CLOUDY");
-            }
-        } else { // sunny nice day!
-            // TODO set sun icon
-            iconImageView.setImageResource(R.drawable.sun);
-            System.out.println("IT'S SUNNY");
-
-        }*/
     }
 
 
